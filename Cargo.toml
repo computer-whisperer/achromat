@@ -1,0 +1,63 @@
+[package]
+name = "achromat"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "MIT OR Apache-2.0"
+description = "Color-managed image decoding — HDR-aware (JPEG XR, JXL, AVIF, EXR, …), ICC → parametric resolution, linear-light thumbnailing"
+repository = "https://github.com/computer-whisperer/achromat"
+authors = ["Christian Balcom"]
+
+[features]
+default = []
+# `convert`: DecodedImage → damascene `Image` (PQ → anchored linear),
+# linear-light thumbnailing, and pixel stats/metadata.
+damascene = ["dep:damascene-core"]
+
+[dependencies]
+anyhow = "1"
+half = { version = "2.6", features = ["bytemuck"] }
+tracing = "0.1"
+
+# `png` is used directly (cICP/iCCP/gAMA/cHRM access); jxl-oxide likewise
+# for its native color encoding metadata. The `image` crate covers
+# JPEG/WebP/AVIF/EXR/Radiance-HDR, with ICC via ImageDecoder.
+png = "0.18"
+image = { version = "0.25", default-features = false, features = ["jpeg", "webp", "exr", "hdr", "avif-native"] }
+jxl-oxide = "0.12"
+
+# pure-Rust CMS for ICC profile handling (prism takes parametric
+# descriptions only, so ICC is resolved client-side).
+moxcms = "0.8"
+
+# JPEG XR (Windows HDR wallpapers/screenshots, scRGB) — vendored jxrlib C.
+jpegxr = "0.3"
+
+damascene-core = { version = "0.4.2", optional = true }
+
+# jpegxr 0.3.1 vendored: its pinned bindgen 0.69 generates opaque structs
+# with current libclang (forward-declared tagPKImageDecode); bumped to
+# bindgen 0.72. Drop the patch when upstream updates. Consumers using
+# achromat by path must carry the same [patch.crates-io] in their own
+# workspace root (patches don't propagate from dependencies); point it at
+# achromat/vendor/jpegxr rather than keeping another copy.
+[patch.crates-io]
+jpegxr = { path = "vendor/jpegxr" }
+
+# Image decode is hot even in dev runs.
+[profile.dev.package.jpegxr]
+opt-level = 3
+[profile.dev.package.jxl-oxide]
+opt-level = 3
+[profile.dev.package.jxl-render]
+opt-level = 3
+[profile.dev.package.jxl-vardct]
+opt-level = 3
+[profile.dev.package.jxl-modular]
+opt-level = 3
+[profile.dev.package.image]
+opt-level = 3
+[profile.dev.package.png]
+opt-level = 3
+[profile.dev.package.moxcms]
+opt-level = 3
