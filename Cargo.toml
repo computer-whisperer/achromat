@@ -40,7 +40,7 @@ moxcms = "0.8"
 # publication; swap in a published jpegxr fork when that matters.)
 jpegxr = { path = "vendor/jpegxr" }
 
-damascene-core = { version = "0.4.2", optional = true }
+damascene-core = { version = "0.4.5", optional = true }
 
 # Image decode is hot even in dev runs.
 [profile.dev.package.jpegxr]

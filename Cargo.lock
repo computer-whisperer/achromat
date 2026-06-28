@@ -341,9 +341,9 @@ checksum = "460fbee9c2c2f33933d720630a6a0bac33ba7053db5344fac858d4b8952d77d5"
 
 [[package]]
 name = "damascene-core"
-version = "0.4.2"
+version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ced7be8406d726925ec045c072a4c7bfc18d1b8db6e77230d90b84e4b9162366"
+checksum = "9b224c7d9bb8316a09393dc472231f2e481677c4c033f6a58fc8636ae4f2a1f9"
 dependencies = [
  "bytemuck",
  "cosmic-text",
@@ -354,6 +354,7 @@ dependencies = [
  "half",
  "image",
  "kurbo",
+ "log",
  "lru",
  "lyon_tessellation",
  "nalgebra",
@@ -367,9 +368,9 @@ dependencies = [
 
 [[package]]
 name = "damascene-fonts"
-version = "0.4.2"
+version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d225808c6a5c9cbe89a06da30b32962e129b6dc24da46de0966c3e1bee7fbc5"
+checksum = "75fef582e0137131d26b9f5fbe4d90242b5f1a05788ba36f03c1fa425826ebc3"
 dependencies = [
  "damascene-fonts-emoji",
  "damascene-fonts-inter",
