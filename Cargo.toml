@@ -30,19 +30,17 @@ jxl-oxide = "0.12"
 # descriptions only, so ICC is resolved client-side).
 moxcms = "0.8"
 
-# JPEG XR (Windows HDR wallpapers/screenshots, scRGB) — vendored jxrlib C.
-jpegxr = "0.3"
+# JPEG XR (Windows HDR wallpapers/screenshots, scRGB). Vendored in-repo
+# (vendor/jpegxr) as a direct path dep: the published jpegxr 0.3.1 pins
+# bindgen 0.69, which generates opaque structs with current libclang
+# (forward-declared tagPKImageDecode); our copy bumps bindgen to 0.72.
+# Because the copy lives inside this repo, the path resolves whether
+# achromat is consumed by path or by git ref — no [patch.crates-io] is
+# needed in downstream workspaces. (A path dep still bars crates.io
+# publication; swap in a published jpegxr fork when that matters.)
+jpegxr = { path = "vendor/jpegxr" }
 
 damascene-core = { version = "0.4.2", optional = true }
-
-# jpegxr 0.3.1 vendored: its pinned bindgen 0.69 generates opaque structs
-# with current libclang (forward-declared tagPKImageDecode); bumped to
-# bindgen 0.72. Drop the patch when upstream updates. Consumers using
-# achromat by path must carry the same [patch.crates-io] in their own
-# workspace root (patches don't propagate from dependencies); point it at
-# achromat/vendor/jpegxr rather than keeping another copy.
-[patch.crates-io]
-jpegxr = { path = "vendor/jpegxr" }
 
 # Image decode is hot even in dev runs.
 [profile.dev.package.jpegxr]
